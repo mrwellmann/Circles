@@ -13,7 +13,7 @@ PlayerSettings:
   useOnDemandResources: 0
   accelerometerFrequency: 60
   companyName: Wellmann
-  productName: Circles
+  productName: Circle
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b: 0.1254902, a: 1}
@@ -137,9 +137,7 @@ PlayerSettings:
     16:9: 1
     Others: 1
   bundleVersion: 1.0.0
-  preloadedAssets:
-  - {fileID: 11400000, guid: fbdc990bf49bbef429b00d18ff82c845, type: 2}
-  - {fileID: 8643747063381843604, guid: 8def0670916047c42b8aed74b7ad58ff, type: 2}
+  preloadedAssets: []
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1
@@ -159,7 +157,7 @@ PlayerSettings:
   androidSupportedAspectRatio: 1
   androidMaxAspectRatio: 2.1
   applicationIdentifier:
-    Android: com.mrwellmann.circle
+    Android: com.wellmann.circel
     Lumin: com.DefaultCompany.com.unity.template.mobile2D
     Standalone: com.wellmann.circles
     iPhone: com.DefaultCompany.com.unity.template.mobile2D
@@ -772,7 +770,8 @@ PlayerSettings:
   webGLLinkerTarget: 1
   webGLThreadsSupport: 0
   webGLDecompressionFallback: 0
-  scriptingDefineSymbols: {}
+  scriptingDefineSymbols:
+    Android: MOREMOUNTAINS_NICEVIBRATIONS
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend:

@@ -4,6 +4,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Lofelt.NiceVibrations;
+using static Lofelt.NiceVibrations.HapticPatterns;
 
 public enum CircleType
 {
@@ -56,15 +58,27 @@ public class Circle : MonoBehaviour
 
     private void PlayAnimation()
     {
-        transform.DOShakeScale(.05f, .25f, 0, 45, false);
-
         Sequence mySequence = DOTween.Sequence();
-        mySequence.PrependInterval(.05f);
         mySequence.AppendCallback(() => PlayAudio());
+        mySequence.AppendInterval(.05f);
+        mySequence.Append(transform.DOShakeScale(.05f, new Vector3(.25f, .25f, 0), 0, 45, false));
+
+        Sequence mySequence2 = DOTween.Sequence();
+        mySequence.AppendInterval(.1f);
+        mySequence.AppendCallback(() => PlayHaptics());
+
+        //Sequence mySequence3 = DOTween.Sequence();
+        //mySequence.Append(mySequence);
+        //mySequence.Join(mySequence2);
     }
 
-    public void PlayAudio()
+    private void PlayAudio()
     {
         _audioSource.Play();
+    }
+
+    private void PlayHaptics()
+    {
+        HapticPatterns.PlayPreset(PresetType.Selection);
     }
 }
