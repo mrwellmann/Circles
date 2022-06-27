@@ -1,0 +1,14 @@
+{
+    "friendlyName": "Samsung Galaxy S20+",
+    "version": 1,
+    "screens": [
+        {
+            "width": 1440,
+            "height": 3200,
+            "dpi": 525.0
+        }
+    ],
+    "systemInfo": {
+        "operatingSystem": "Android"
+    }
+}

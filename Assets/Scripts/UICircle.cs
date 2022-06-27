@@ -1,10 +1,7 @@
 using DG.Tweening;
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using Lofelt.NiceVibrations;
 using UnityEngine;
 using UnityEngine.UI;
-using Lofelt.NiceVibrations;
 using static Lofelt.NiceVibrations.HapticPatterns;
 
 public enum CircleType
@@ -26,10 +23,13 @@ public class Circle : MonoBehaviour
     private Image _image;
     private AudioSource _audioSource;
 
+    private Rigidbody2D _rb;
+
     public CircleType CircleType { get; private set; }
 
     public void Awake()
     {
+        _rb = GetComponent<Rigidbody2D>();
     }
 
     private void OnClick()
@@ -80,5 +80,15 @@ public class Circle : MonoBehaviour
     private void PlayHaptics()
     {
         HapticPatterns.PlayPreset(PresetType.Selection);
+    }
+
+    public void ActivateRigindbody()
+    {
+        _rb.simulated = true;
+    }
+
+    public void DeactivateRigitBoday()
+    {
+        _rb.simulated = false;
     }
 }
