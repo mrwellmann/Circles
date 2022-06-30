@@ -4,20 +4,20 @@ using UnityEngine;
 using UnityEngine.UI;
 using static Lofelt.NiceVibrations.HapticPatterns;
 
-public enum CircleType
+public enum UICircleType
 {
     Red,
     Blue,
     Yellow
 }
 
-public class Circle : MonoBehaviour
+public class UICircle : MonoBehaviour
 {
     public event CircleClickedDelegate CircleClicked;
-    public delegate void CircleClickedDelegate(Circle sender);
+    public delegate void CircleClickedDelegate(UICircle sender);
 
     [SerializeField]
-    private GenericDictionary<CircleType, Sprite> circleImages;
+    private GenericDictionary<UICircleType, Sprite> circleImages;
 
     private Button _button;
     private Image _image;
@@ -25,7 +25,7 @@ public class Circle : MonoBehaviour
 
     private Rigidbody2D _rb;
 
-    public CircleType CircleType { get; private set; }
+    public UICircleType CircleType { get; private set; }
 
     public void Awake()
     {
@@ -37,7 +37,7 @@ public class Circle : MonoBehaviour
         CircleClicked?.Invoke(this);
     }
 
-    public void Create(CircleType circleType, bool preSpawn = false)
+    public void Create(UICircleType circleType, bool preSpawn = false)
     {
         CircleType = circleType;
 

@@ -15,29 +15,29 @@ public class DeviceShakeDetection : MonoBehaviour
 
     // This next parameter is initialized to 2.0 per Apple's recommendation,
     // or at least according to Brady! ;)
-    private float _shakeDetectionThreshold = 2.0f;
+    private float _shakeDetectionThreshold = 1.75f;
 
     private float lowPassFilterFactor;
     private Vector3 lowPassValue;
 
-    void Start()
+    private void Start()
     {
         SetuoDeviceShake();
     }
 
-    void Update()
+    private void Update()
     {
         RecogniceDeviceShake();
     }
 
-    void SetuoDeviceShake()
+    private void SetuoDeviceShake()
     {
         lowPassFilterFactor = _accelerometerUpdateInterval / _lowPassKernelWidthInSeconds;
         _shakeDetectionThreshold *= _shakeDetectionThreshold;
         lowPassValue = Input.acceleration;
     }
 
-    void RecogniceDeviceShake()
+    private void RecogniceDeviceShake()
     {
         Vector3 acceleration = Input.acceleration;
         lowPassValue = Vector3.Lerp(lowPassValue, acceleration, lowPassFilterFactor);

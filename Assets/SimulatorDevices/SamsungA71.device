@@ -1,11 +1,11 @@
 {
-    "friendlyName": "Samsung Galaxy S20+",
+    "friendlyName": "Samsung Galaxy A71",
     "version": 1,
     "screens": [
         {
-            "width": 1440,
-            "height": 3200,
-            "dpi": 525.0
+            "width": 1080,
+            "height": 2400,
+            "dpi": 393.0
         }
     ],
     "systemInfo": {

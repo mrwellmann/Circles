@@ -7,13 +7,13 @@ public class UIPlayManager : MonoBehaviour
     [SerializeField]
     private GameObject _CirclePrefab;
 
-    private List<Circle> _Circles = new List<Circle>();
+    private List<UICircle> _Circles = new List<UICircle>();
     private DeviceShakeDetection _shakeDetection;
 
     // Start is called before the first frame update
     private void Awake()
     {
-        _Circles.AddRange(GetComponentsInChildren<Circle>());
+        _Circles.AddRange(GetComponentsInChildren<UICircle>());
 
         _shakeDetection = GetComponent<DeviceShakeDetection>();
         _shakeDetection.DeviceShakeDetected += OnDeviceShake;
@@ -43,12 +43,12 @@ public class UIPlayManager : MonoBehaviour
     private void Restart()
     {
         CleanArea(_Circles);
-        CreateCircle(CircleType.Red, presSpawn: true);
-        CreateCircle(CircleType.Yellow, presSpawn: true);
-        CreateCircle(CircleType.Blue, presSpawn: true);
+        CreateCircle(UICircleType.Red, presSpawn: true);
+        CreateCircle(UICircleType.Yellow, presSpawn: true);
+        CreateCircle(UICircleType.Blue, presSpawn: true);
     }
 
-    private void CleanArea(List<Circle> circles)
+    private void CleanArea(List<UICircle> circles)
     {
         foreach (var circle in circles)
         {
@@ -57,7 +57,7 @@ public class UIPlayManager : MonoBehaviour
         circles.Clear();
     }
 
-    private void CreateCircle(CircleType circleType, int siblingindex = -1, bool presSpawn = false)
+    private void CreateCircle(UICircleType circleType, int siblingindex = -1, bool presSpawn = false)
     {
         var circleObject = Instantiate(_CirclePrefab);
         circleObject.transform.SetParent(transform);
@@ -65,14 +65,14 @@ public class UIPlayManager : MonoBehaviour
         if (siblingindex > 0)
             circleObject.transform.SetSiblingIndex(siblingindex);
 
-        var circle = circleObject.GetComponent<Circle>();
+        var circle = circleObject.GetComponent<UICircle>();
         circle.Create(circleType, presSpawn);
         circle.CircleClicked += OnCircleClicked;
 
         _Circles.Add(circle);
     }
 
-    private void OnCircleClicked(Circle sender)
+    private void OnCircleClicked(UICircle sender)
     {
         CreateCircle(sender.CircleType, sender.transform.GetSiblingIndex() + 1);
     }
