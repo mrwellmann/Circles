@@ -15,7 +15,7 @@ public class DeviceShakeDetection : MonoBehaviour
 
     // This next parameter is initialized to 2.0 per Apple's recommendation,
     // or at least according to Brady! ;)
-    private float _shakeDetectionThreshold = 1.75f;
+    private float _shakeDetectionThreshold = 1.5f;
 
     private float lowPassFilterFactor;
     private Vector3 lowPassValue;
