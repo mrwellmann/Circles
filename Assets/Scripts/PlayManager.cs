@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using EasyButtons;
 
 public class PlayManager : MonoBehaviour
 {
@@ -24,6 +25,7 @@ public class PlayManager : MonoBehaviour
             Restart();
     }
 
+    [Button(Mode = ButtonMode.EnabledInPlayMode)]
     private void OnShakeDetected()
     {
         _ballManager.SetGravityState(isActive: true);

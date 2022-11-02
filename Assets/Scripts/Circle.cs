@@ -1,28 +1,50 @@
+using EasyButtons;
 using Lofelt.NiceVibrations;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
+[System.Serializable]
 public class Circle : MonoBehaviour, ICircle
 {
+    [FormerlySerializedAs("_circleImages")]
     [SerializeField]
-    private GenericDictionary<CircleType, Sprite> _circleImages;
+    private List<CircleVisualisation> _circleVisualisation;
 
+    private int _currentVisualisation = 0;
+
+    private Color _color;
     private SpriteRenderer _spriteRenderer;
     private Rigidbody2D _body2D;
     private AudioSource _audioSource;
     private Animator _ballAnimator;
 
-    private CircleType _circleType;
     private bool _gravityEnabled;
     private int _hitAnimationParameter;
 
-    public CircleType CircelType
+    public CircleVisualisation CircleVisualisation
     {
-        get => _circleType;
-        set
-        {
-            _circleType = value;
-            _spriteRenderer.sprite = _circleImages[_circleType];
-        }
+        get;
+        set;
+    }
+
+    //public CircleSprite CircelType
+    //{
+    //    get => _circleType;
+    //    set
+    //    {
+    //        _circleType = value;
+    //        _spriteRenderer.sprite = _circleVisualisation[_circleType];
+    //    }
+    //}
+    [Button]
+    public void SwitchVisualisation()
+    {
+        _currentVisualisation++;
+        if (_currentVisualisation >= _circleVisualisation.Count) _currentVisualisation = 0;
+
+        _spriteRenderer.sprite = _circleVisualisation[_currentVisualisation].CircleSprite;
+        _spriteRenderer.color = _circleVisualisation[_currentVisualisation].SpriteColor;
     }
 
     public double Radius { get; set; }
