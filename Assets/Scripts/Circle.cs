@@ -69,6 +69,11 @@ public class Circle : MonoBehaviour, ICircleProperties, IObjectInteractions
         _hitAnimationParameter = Animator.StringToHash("Hit");
     }
 
+    private void Start()
+    {
+        _audioSource.Play();
+    }
+
     protected virtual void OnCollisionEnter2D(Collision2D collision)
     {
         //Debug.Log($"c.relativeVelocity: {collision.relativeVelocity}, c.magnitude: {collision.relativeVelocity.magnitude}, c.sqrMagnitude: {collision.relativeVelocity.sqrMagnitude} _body2D.velocity: {_body2D.velocity.magnitude}");
@@ -95,8 +100,8 @@ public class Circle : MonoBehaviour, ICircleProperties, IObjectInteractions
 
     protected virtual void HitWall()
     {
-        _audioSource.volume = _body2D.velocity.magnitude;
-        _audioSource.Play();
+        //_audioSource.volume = _body2D.velocity.magnitude;
+        //_audioSource.Play();
 
         float amplitude = _body2D.velocity.magnitude / 100f;
         HapticPatterns.PlayEmphasis(amplitude, 0.7f);
