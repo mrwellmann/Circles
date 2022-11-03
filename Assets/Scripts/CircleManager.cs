@@ -10,6 +10,7 @@ public class CircleManager : MonoBehaviour
     private GameObject _basicCirclePrefab;
 
     private List<Circle> _circles;
+    private bool _gravityEnabled = false;
 
     private void Awake()
     {
@@ -25,8 +26,8 @@ public class CircleManager : MonoBehaviour
         }
         _circles.Clear();
 
-        var circleObject = GameObject.Instantiate(_basicCirclePrefab);
-        circleObject.transform.SetParent(gameObject.transform, false);
+        var circleObject = GameObject.Instantiate(_basicCirclePrefab, gameObject.transform);
+        //circleObject.transform.SetParent(gameObject.transform, false);
 
         var circle = circleObject.GetComponent<Circle>();
         _circles.Add(circle);
@@ -36,9 +37,19 @@ public class CircleManager : MonoBehaviour
 
     public void SetGravityState(bool isActive)
     {
+        _gravityEnabled = isActive;
         foreach (var circle in _circles)
         {
             circle.GravityEnabled = isActive;
         }
+    }
+
+    public void CreateCircleAtPosition(Vector3 position = default, Quaternion rotation = default)
+    {
+        var circleObject = GameObject.Instantiate(_basicCirclePrefab, position, rotation, gameObject.transform);
+        var circle = circleObject.GetComponent<Circle>();
+        circle.GravityEnabled = _gravityEnabled;
+        circle.SetRandomVisualisation();
+        _circles.Add(circle);
     }
 }
