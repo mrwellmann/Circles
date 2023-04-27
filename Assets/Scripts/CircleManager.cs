@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,6 +9,9 @@ public class CircleManager : MonoBehaviour
 {
     [SerializeField]
     private GameObject _basicCirclePrefab;
+
+    [SerializeField]
+    private float _circelSizeSteps = 0.025f;
 
     private List<Circle> _circles;
     public bool GravityEnabled { get; private set; }
@@ -51,5 +55,14 @@ public class CircleManager : MonoBehaviour
         circle.GravityEnabled = GravityEnabled;
         circle.SetRandomVisualisation();
         _circles.Add(circle);
+    }
+
+    internal void IncreaseCircelSize()
+    {
+        foreach (var circle in _circles)
+        {
+            var targetScale = circle.transform.localScale * _circelSizeSteps;// new Vector3(_circelSizeSteps, _circelSizeSteps, _circelSizeSteps);
+            circle.transform.DOScale(targetScale, 0.25f);
+        }
     }
 }

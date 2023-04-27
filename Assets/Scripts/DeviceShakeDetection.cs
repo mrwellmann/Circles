@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,7 +6,7 @@ using UnityEngine.Events;
 
 public class DeviceShakeDetection : MonoBehaviour
 {
-    public UnityAction DeviceShakeDetected;
+    public event Action OnDeviceShakeDetected;
 
     private float _accelerometerUpdateInterval = 1.0f / 60.0f;
 
@@ -49,7 +50,7 @@ public class DeviceShakeDetection : MonoBehaviour
             // guards in the if check above to avoid redundant handling during
             // the same shake (e.g. a minimum refractory period).
             Debug.Log("Shake event detected at time " + Time.time);
-            DeviceShakeDetected.Invoke();
+            OnDeviceShakeDetected.Invoke();
         }
     }
 }

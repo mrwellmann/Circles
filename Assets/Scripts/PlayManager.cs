@@ -8,6 +8,8 @@ public class PlayManager : MonoBehaviour
 {
     private DeviceShakeDetection _deviceShakeDetection;
     private CircleManager _ballManager;
+    private ClapDetector _clapDetector;
+
     private bool _wasZoomingLastFrame;
     private Vector2 _lastPanPosition;
     private int _panFingerId;
@@ -15,10 +17,12 @@ public class PlayManager : MonoBehaviour
 
     private void Awake()
     {
-        _deviceShakeDetection = gameObject.AddComponent<DeviceShakeDetection>();
-        _deviceShakeDetection.DeviceShakeDetected += OnShakeDetected;
-
+        _deviceShakeDetection = gameObject.GetComponent<DeviceShakeDetection>();
+        _clapDetector = gameObject.GetComponent<ClapDetector>();
         _ballManager = gameObject.GetComponentInChildren<CircleManager>();
+
+        _deviceShakeDetection.OnDeviceShakeDetected += OnShakeDetected;
+        _clapDetector.OnClapDetected += OnClapDetected;
     }
 
     private void Update()
@@ -206,6 +210,12 @@ public class PlayManager : MonoBehaviour
     private void OnShakeDetected()
     {
         _ballManager.SetGravityState(isActive: true);
+    }
+
+    [Button(Mode = ButtonMode.EnabledInPlayMode)]
+    private void OnClapDetected()
+    {
+        _ballManager.IncreaseCircelSize();
     }
 
     [Button(Mode = ButtonMode.EnabledInPlayMode)]

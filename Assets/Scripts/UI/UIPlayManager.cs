@@ -16,7 +16,7 @@ public class UIPlayManager : MonoBehaviour
         _Circles.AddRange(GetComponentsInChildren<UICircle>());
 
         _shakeDetection = GetComponent<DeviceShakeDetection>();
-        _shakeDetection.DeviceShakeDetected += OnDeviceShake;
+        _shakeDetection.OnDeviceShakeDetected += OnDeviceShake;
     }
 
     private void OnDeviceShake()
