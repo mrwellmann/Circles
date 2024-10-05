@@ -1,5 +1,6 @@
 UWP/
 *.pfx*
+/.utmp/*
 Assets/GoogleARCore*
 Assets/PlayServicesResolver*
 Assets/UnityARKitPlugin*

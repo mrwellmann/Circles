@@ -8,33 +8,32 @@ using UnityEngine;
 public class CircleManager : MonoBehaviour
 {
     [SerializeField]
-    private GameObject _basicCirclePrefab;
+    private GameObject basicCirclePrefab;
 
     [SerializeField]
-    private float _circelSizeSteps = 0.025f;
+    private float circleSizeSteps = 0.025f;
 
-    private List<Circle> _circles;
+    private List<Circle> circles;
     public bool GravityEnabled { get; private set; }
 
     private void Awake()
     {
-        _circles = gameObject.GetComponentsInChildren<Circle>().ToList();
+        circles = gameObject.GetComponentsInChildren<Circle>().ToList();
         Reset();
     }
 
     public void Reset()
     {
-        for (int i = 0; i < _circles.Count(); i++)
+        for (int i = 0; i < circles.Count(); i++)
         {
-            Destroy(_circles[i].gameObject);
+            Destroy(circles[i].gameObject);
         }
-        _circles.Clear();
+        circles.Clear();
 
-        var circleObject = GameObject.Instantiate(_basicCirclePrefab, gameObject.transform);
-        //circleObject.transform.SetParent(gameObject.transform, false);
+        var circleObject = GameObject.Instantiate(basicCirclePrefab, gameObject.transform);
 
         var circle = circleObject.GetComponent<Circle>();
-        _circles.Add(circle);
+        circles.Add(circle);
 
         SetGravityState(isActive: false);
     }
@@ -42,7 +41,7 @@ public class CircleManager : MonoBehaviour
     public void SetGravityState(bool isActive)
     {
         GravityEnabled = isActive;
-        foreach (var circle in _circles)
+        foreach (var circle in circles)
         {
             circle.GravityEnabled = isActive;
         }
@@ -50,18 +49,27 @@ public class CircleManager : MonoBehaviour
 
     public void CreateCircleAtPosition(Vector3 position = default, Quaternion rotation = default)
     {
-        var circleObject = GameObject.Instantiate(_basicCirclePrefab, position, rotation, gameObject.transform);
+        var circleObject = GameObject.Instantiate(basicCirclePrefab, position, rotation, gameObject.transform);
         var circle = circleObject.GetComponent<Circle>();
         circle.GravityEnabled = GravityEnabled;
-        circle.SetRandomVisualisation();
-        _circles.Add(circle);
+        circle.SetRandomVisualization();
+        circles.Add(circle);
     }
 
-    internal void IncreaseCircelSize()
+    internal void IncreaseCircleSize()
     {
-        foreach (var circle in _circles)
+        foreach (var circle in circles)
         {
-            var targetScale = circle.transform.localScale * _circelSizeSteps;// new Vector3(_circelSizeSteps, _circelSizeSteps, _circelSizeSteps);
+            var targetScale = circle.transform.localScale * circleSizeSteps;
+            circle.transform.DOScale(targetScale, 0.25f);
+        }
+    }
+
+    internal void IncreaseCircleSize(float sizeChange)
+    {
+        foreach (var circle in circles)
+        {
+            var targetScale = circle.transform.localScale * sizeChange;
             circle.transform.DOScale(targetScale, 0.25f);
         }
     }

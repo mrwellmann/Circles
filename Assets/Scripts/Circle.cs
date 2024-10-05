@@ -6,43 +6,42 @@ using UnityEngine.Serialization;
 
 public class Circle : MonoBehaviour, ICircleProperties, IObjectInteractions
 {
-    [FormerlySerializedAs("_circleVisualisation")]
     [SerializeField]
-    private List<CircleVisualisation> _circleVisualisations;
+    private List<CircleVisualization> circleVisualizations;
 
-    private int _currentVisualisation = 0;
+    private int currentVisualization = 0;
 
-    private SpriteRenderer _spriteRenderer;
-    private Rigidbody2D _body2D;
-    private AudioSource _audioSource;
-    private Animator _ballAnimator;
+    private SpriteRenderer spriteRenderer;
+    private Rigidbody2D body2D;
+    private AudioSource audioSource;
+    private Animator ballAnimator;
 
-    private bool _gravityEnabled;
-    private int _hitAnimationParameter;
+    private bool gravityEnabled;
+    private int hitAnimationParameter;
 
-    public CircleVisualisation CircleVisualisation
+    public CircleVisualization CircleVisualization
     {
         get
         {
-            return _circleVisualisations[CurrentVisualisation];
+            return circleVisualizations[CurrentVisualization];
         }
         private set
         {
-            if (_spriteRenderer == null)
-                _spriteRenderer = GetComponent<SpriteRenderer>();
+            if (spriteRenderer == null)
+                spriteRenderer = GetComponent<SpriteRenderer>();
 
-            _spriteRenderer.sprite = value.CircleSprite;
-            _spriteRenderer.color = value.SpriteColor;
+            spriteRenderer.sprite = value.CircleSprite;
+            spriteRenderer.color = value.SpriteColor;
         }
     }
 
-    public int CurrentVisualisation
+    public int CurrentVisualization
     {
-        get => _currentVisualisation;
+        get => currentVisualization;
         set
         {
-            _currentVisualisation = value;
-            CircleVisualisation = _circleVisualisations[value];
+            currentVisualization = value;
+            CircleVisualization = circleVisualizations[value];
         }
     }
 
@@ -50,12 +49,12 @@ public class Circle : MonoBehaviour, ICircleProperties, IObjectInteractions
 
     public bool GravityEnabled
     {
-        get => _gravityEnabled;
+        get => gravityEnabled;
         set
         {
-            _gravityEnabled = value;
-            if (!value) _body2D.constraints = RigidbodyConstraints2D.FreezeAll;
-            else _body2D.constraints = RigidbodyConstraints2D.None;
+            gravityEnabled = value;
+            if (!value) body2D.constraints = RigidbodyConstraints2D.FreezeAll;
+            else body2D.constraints = RigidbodyConstraints2D.None;
         }
     }
 
@@ -63,39 +62,42 @@ public class Circle : MonoBehaviour, ICircleProperties, IObjectInteractions
 
     private void Awake()
     {
-        _body2D = GetComponent<Rigidbody2D>();
-        _ballAnimator = GetComponent<Animator>();
-        _audioSource = GetComponent<AudioSource>();
-        _hitAnimationParameter = Animator.StringToHash("Hit");
+        body2D = GetComponent<Rigidbody2D>();
+        ballAnimator = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
+        hitAnimationParameter = Animator.StringToHash("Hit");
     }
 
     private void Start()
     {
-        _audioSource.Play();
+        audioSource.Play();
     }
 
     protected virtual void OnCollisionEnter2D(Collision2D collision)
     {
         //Debug.Log($"c.relativeVelocity: {collision.relativeVelocity}, c.magnitude: {collision.relativeVelocity.magnitude}, c.sqrMagnitude: {collision.relativeVelocity.sqrMagnitude} _body2D.velocity: {_body2D.velocity.magnitude}");
-        HitWall();
+        if (GravityEnabled)
+        {
+            HitWall();
+        }
     }
 
     [Button(Mode = ButtonMode.EnabledInPlayMode)]
-    public void SwitchVisualisation()
+    public void SwitchVisualization()
     {
-        if (CurrentVisualisation == _circleVisualisations.Count - 1) CurrentVisualisation = 0;
-        else CurrentVisualisation++;
+        if (CurrentVisualization == circleVisualizations.Count - 1) CurrentVisualization = 0;
+        else CurrentVisualization++;
     }
 
-    public void SetRandomVisualisation()
+    public void SetRandomVisualization()
     {
-        CurrentVisualisation = Random.Range(0, _circleVisualisations.Count);
+        CurrentVisualization = Random.Range(0, circleVisualizations.Count);
     }
 
     [Button]
-    public void SwitchVisualisationTo(int index)
+    public void SwitchVisualizationTo(int index)
     {
-        if (index < _circleVisualisations.Count) CurrentVisualisation = index;
+        if (index < circleVisualizations.Count) CurrentVisualization = index;
     }
 
     protected virtual void HitWall()
@@ -103,28 +105,28 @@ public class Circle : MonoBehaviour, ICircleProperties, IObjectInteractions
         //_audioSource.volume = _body2D.velocity.magnitude;
         //_audioSource.Play();
 
-        float amplitude = _body2D.velocity.magnitude / 100f;
-        HapticPatterns.PlayEmphasis(amplitude, 0.7f);
+        // float amplitude = body2D.linearVelocity.magnitude / 100f;
+        // HapticPatterns.PlayEmphasis(amplitude, 0.7f);
 
-        //_ballAnimator.SetTrigger(_hitAnimationParameter);
+        //ballAnimator.SetTrigger(hitAnimationParameter);
         //Debug.Log($"_body2D.velocity.magnitude: {_body2D.velocity.magnitude}, amplitude: {amplitude}");
     }
 
     public void OnTap()
     {
-        SwitchVisualisation();
+        SwitchVisualization();
         Debug.Log("OnTap");
     }
 
     public void OnDoubleTap()
     {
-        SwitchVisualisation();
+        SwitchVisualization();
         Debug.Log("OnDoubleTap");
     }
 
     public void OnWiping()
     {
-        SwitchVisualisation();
+        SwitchVisualization();
         Debug.Log("OnWiping");
     }
 }

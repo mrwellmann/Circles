@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class CircleVisualisation
+public class CircleVisualization
 {
     public Sprite CircleSprite;
     public Color SpriteColor = Color.white;

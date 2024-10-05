@@ -1,34 +1,27 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using EasyButtons;
 using UnityEngine.EventSystems;
 
-public class PlayManager : MonoBehaviour
+public class PlayManagerBasic : MonoBehaviour
 {
     private DeviceShakeDetection deviceShakeDetection;
     private CircleManager ballManager;
-    private ClapDetector clapDetector;
 
-    private bool wasZoomingLastFrame;
     private Vector2 lastPanPosition;
-    private int _panFingerId;
+    float lastDistance = 0;
+    private int panFingerId;
     private List<Circle> lastTouchedCircles;
 
     private void Awake()
     {
         deviceShakeDetection = gameObject.GetComponent<DeviceShakeDetection>();
-        clapDetector = gameObject.GetComponent<ClapDetector>();
         ballManager = gameObject.GetComponentInChildren<CircleManager>();
+        lastTouchedCircles = new List<Circle>();
 
         if (deviceShakeDetection != null)
         {
             deviceShakeDetection.OnDeviceShakeDetected += OnShakeDetected;
-        }
-
-        if (clapDetector != null)
-        {
-            clapDetector.OnClapDetected += OnClapDetected;
         }
     }
 
@@ -51,41 +44,17 @@ public class PlayManager : MonoBehaviour
         switch (Input.touchCount)
         {
             case 1: // One Finger
-                wasZoomingLastFrame = false;
+                lastDistance = 0;
                 OneFingerInteractions(out pointer, out raycastResult);
                 break;
 
-            case 2: // Two Finger
-                TwoFingerInteractions(out pointer, out raycastResult);
-                break;
+            // case 2: // Two Finger
+            //     TwoFingerInteractions(out pointer, out raycastResult);
+            //     break;
 
             default:
-                wasZoomingLastFrame = false;
                 break;
         }
-
-        //PointerEventData pointer = new PointerEventData(EventSystem.current);
-        //List<RaycastResult> raycastResult = new List<RaycastResult>();
-
-        //for (int i = 0; i < Input.touchCount; ++i)
-        //{
-        //    Debug.Log($"TapCount for {i} is {Input.GetTouch(i).tapCount}");
-
-        //    if (Input.GetTouch(i).phase.Equals(TouchPhase.Began))
-        //    {
-        //        pointer.position = Input.GetTouch(i).position;
-
-        //        //var objectHit = EventRay(pointer, raycastResult);
-        //        var objectHit = TryGetCameraRayHit(pointer, raycastResult);
-
-        //        if (!objectHit)
-        //        {
-        //            // Construct a ray from the current touch coordinates
-        //            Ray ray = Camera.main.ScreenPointToRay(Input.GetTouch(i).position);
-        //            _ballManager.CreateCircleAtPosition(position: new Vector3(ray.origin.x, ray.origin.y, 0));
-        //        }
-        //    }
-        //}
     }
 
     private void OneFingerInteractions(out PointerEventData[] pointer, out List<RaycastResult>[] raycastResult)
@@ -99,7 +68,7 @@ public class PlayManager : MonoBehaviour
         if (Input.GetTouch(0).phase == TouchPhase.Began) //Touch started this frame
         {
             lastPanPosition = touch.position;
-            _panFingerId = touch.fingerId;
+            panFingerId = touch.fingerId;
 
             if (TryGetCameraRayHit(pointer[0], ref raycastResult[0]))
             {
@@ -115,7 +84,7 @@ public class PlayManager : MonoBehaviour
                 ballManager.CreateCircleAtPosition(position: new Vector3(position.x, position.y, 0));
             }
         }
-        else if (touch.fingerId == _panFingerId && touch.phase == TouchPhase.Moved)
+        else if (touch.fingerId == panFingerId && touch.phase == TouchPhase.Moved)
         {
             if (lastTouchedCircles.Count > 0) //drag circle
             {
@@ -142,53 +111,41 @@ public class PlayManager : MonoBehaviour
         }
     }
 
-    private static void TwoFingerInteractions(out PointerEventData[] pointer, out List<RaycastResult>[] raycastResult)
+    // private static void TwoFingerInteractions(out PointerEventData[] pointer, out List<RaycastResult>[] raycastResult)
+    // {
+    //     pointer = new PointerEventData[] { new PointerEventData(EventSystem.current), new PointerEventData(EventSystem.current) };
+    //     raycastResult = new List<RaycastResult>[] { new List<RaycastResult>(), new List<RaycastResult>() };
+
+    //     Vector2[] newPositions = new Vector2[] { Input.GetTouch(0).position, Input.GetTouch(1).position };
+
+    //     pointer[0].position = Input.GetTouch(0).position;
+    //     pointer[1].position = Input.GetTouch(1).position;
+    // }
+
+    private void TwoFingerInteractions(out PointerEventData[] pointer, out List<RaycastResult>[] raycastResult)
     {
         pointer = new PointerEventData[] { new PointerEventData(EventSystem.current), new PointerEventData(EventSystem.current) };
         raycastResult = new List<RaycastResult>[] { new List<RaycastResult>(), new List<RaycastResult>() };
-
-        Vector2[] newPositions = new Vector2[] { Input.GetTouch(0).position, Input.GetTouch(1).position };
-
         pointer[0].position = Input.GetTouch(0).position;
         pointer[1].position = Input.GetTouch(1).position;
 
-        //if (!_wasZoomingLastFrame)
-        //{
-        //    lastZoomPositions = newPositions;
-        //    _wasZoomingLastFrame = true;
-        //}
-        //else
-        //{
-        //    // Zoom based on the distance between the new positions compared to the
-        //    // distance between the previous positions.
-        //    float newDistance = Vector2.Distance(newPositions[0], newPositions[1]);
-        //    float oldDistance = Vector2.Distance(lastZoomPositions[0], lastZoomPositions[1]);
-        //    float position = newDistance - oldDistance;
-
-        //    ZoomCamera(position, ZoomSpeedTouch);
-
-        //    lastZoomPositions = newPositions;
-        //}
-    }
-
-    private static bool EventRay(PointerEventData pointer, List<RaycastResult> raycastResult)
-    {
-        bool hit = false;
-        EventSystem.current.RaycastAll(pointer, raycastResult);
-
-        foreach (RaycastResult result in raycastResult)
+        if (Input.GetTouch(0).phase == TouchPhase.Began && Input.GetTouch(1).phase == TouchPhase.Began)
         {
-            //Debug.Log("EventRay");
-            Circle circle = result.gameObject.GetComponent<Circle>();
-            if (circle != null)
-            {
-                circle.OnTap();
-                hit = true;
-            }
+            lastDistance = Vector2.Distance(Input.GetTouch(0).position, Input.GetTouch(1).position);
         }
-        raycastResult.Clear();
+        else if (lastDistance > 0 && (Input.GetTouch(0).phase == TouchPhase.Moved || Input.GetTouch(1).phase == TouchPhase.Moved))
+        {
+            float currentDistance = Vector2.Distance(Input.GetTouch(0).position, Input.GetTouch(1).position);
 
-        return hit;
+            float sizeChange = currentDistance / lastDistance;
+
+            sizeChange = sizeChange > 1 ? sizeChange * 1.01f : sizeChange / 1.01f;
+            //sizeChange = Mathf.Clamp(sizeChange, 0.9f, 1.1f);
+
+            OnChangeSizeDetected(sizeChange);
+            lastDistance = currentDistance;
+
+        }
     }
 
     private bool TryGetCameraRayHit(PointerEventData pointer, ref List<RaycastResult> raycastResult)
@@ -220,9 +177,9 @@ public class PlayManager : MonoBehaviour
     }
 
     [Button(Mode = ButtonMode.EnabledInPlayMode)]
-    private void OnClapDetected()
+    private void OnChangeSizeDetected(float sizeChange)
     {
-        ballManager.IncreaseCircleSize();
+        ballManager.IncreaseCircleSize(sizeChange);
     }
 
     [Button(Mode = ButtonMode.EnabledInPlayMode)]
