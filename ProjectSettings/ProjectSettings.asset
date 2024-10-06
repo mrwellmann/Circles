@@ -165,7 +165,7 @@ PlayerSettings:
   androidMaxAspectRatio: 2.1
   androidMinAspectRatio: 1
   applicationIdentifier:
-    Android: com.square.circles
+    Android: com.dragonchameleon.circles
     Lumin: com.DefaultCompany.com.unity.template.mobile2D
     Standalone: com.square.circles
     iPhone: com.square.circles
