@@ -3,92 +3,94 @@ using Lofelt.NiceVibrations;
 using UnityEngine;
 using UnityEngine.UI;
 using static Lofelt.NiceVibrations.HapticPatterns;
-
-public enum UICircleType
+namespace Circles.UI
 {
-    Red,
-    Blue,
-    Yellow
-}
-
-public class UICircle : MonoBehaviour
-{
-    public event CircleClickedDelegate CircleClicked;
-    public delegate void CircleClickedDelegate(UICircle sender);
-
-    [SerializeField]
-    private GenericDictionary<UICircleType, Sprite> circleImages;
-
-    private Button _button;
-    private Image _image;
-    private AudioSource _audioSource;
-
-    private Rigidbody2D _rb;
-
-    public UICircleType CircleType { get; private set; }
-
-    public void Awake()
+    public enum UICircleType
     {
-        _rb = GetComponent<Rigidbody2D>();
+        Red,
+        Blue,
+        Yellow
     }
 
-    private void OnClick()
+    public class UICircle : MonoBehaviour
     {
-        CircleClicked?.Invoke(this);
-    }
+        public event CircleClickedDelegate CircleClicked;
+        public delegate void CircleClickedDelegate(UICircle sender);
 
-    public void Create(UICircleType circleType, bool preSpawn = false)
-    {
-        CircleType = circleType;
+        [SerializeField]
+        private GenericDictionary<UICircleType, Sprite> circleImages;
 
-        _button = GetComponent<Button>();
-        _button.onClick.AddListener(OnClick);
+        private Button _button;
+        private Image _image;
+        private AudioSource _audioSource;
 
-        _image = GetComponent<Image>();
-        _image.sprite = circleImages[circleType];
+        private Rigidbody2D _rb;
 
-        _audioSource = GetComponent<AudioSource>();
+        public UICircleType CircleType { get; private set; }
 
-        gameObject.SetActive(true);
-        if (!preSpawn)
+        public void Awake()
         {
-            PlayAnimation();
+            _rb = GetComponent<Rigidbody2D>();
         }
-    }
 
-    private void PlayAnimation()
-    {
-        Sequence mySequence = DOTween.Sequence();
-        mySequence.AppendCallback(() => PlayAudio());
-        mySequence.AppendInterval(.05f);
-        mySequence.Append(transform.DOShakeScale(.05f, new Vector3(.25f, .25f, 0), 0, 45, false));
+        private void OnClick()
+        {
+            CircleClicked?.Invoke(this);
+        }
 
-        Sequence mySequence2 = DOTween.Sequence();
-        mySequence.AppendInterval(.1f);
-        mySequence.AppendCallback(() => PlayHaptics());
+        public void Create(UICircleType circleType, bool preSpawn = false)
+        {
+            CircleType = circleType;
 
-        //Sequence mySequence3 = DOTween.Sequence();
-        //mySequence.Append(mySequence);
-        //mySequence.Join(mySequence2);
-    }
+            _button = GetComponent<Button>();
+            _button.onClick.AddListener(OnClick);
 
-    private void PlayAudio()
-    {
-        _audioSource.Play();
-    }
+            _image = GetComponent<Image>();
+            _image.sprite = circleImages[circleType];
 
-    private void PlayHaptics()
-    {
-        HapticPatterns.PlayPreset(PresetType.Selection);
-    }
+            _audioSource = GetComponent<AudioSource>();
 
-    public void ActivateRigindbody()
-    {
-        _rb.simulated = true;
-    }
+            gameObject.SetActive(true);
+            if (!preSpawn)
+            {
+                PlayAnimation();
+            }
+        }
 
-    public void DeactivateRigitBoday()
-    {
-        _rb.simulated = false;
+        private void PlayAnimation()
+        {
+            Sequence mySequence = DOTween.Sequence();
+            mySequence.AppendCallback(() => PlayAudio());
+            mySequence.AppendInterval(.05f);
+            mySequence.Append(transform.DOShakeScale(.05f, new Vector3(.25f, .25f, 0), 0, 45, false));
+
+            Sequence mySequence2 = DOTween.Sequence();
+            mySequence.AppendInterval(.1f);
+            mySequence.AppendCallback(() => PlayHaptics());
+
+            //Sequence mySequence3 = DOTween.Sequence();
+            //mySequence.Append(mySequence);
+            //mySequence.Join(mySequence2);
+        }
+
+        private void PlayAudio()
+        {
+            _audioSource.Play();
+        }
+
+        private void PlayHaptics()
+        {
+            HapticPatterns.PlayPreset(PresetType.Selection);
+        }
+
+        public void ActivateRigindbody()
+        {
+            _rb.simulated = true;
+        }
+
+        public void DeactivateRigitBoday()
+        {
+            _rb.simulated = false;
+        }
     }
 }

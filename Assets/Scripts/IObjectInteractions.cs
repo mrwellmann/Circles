@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public interface IObjectInteractions
+namespace Circles
 {
-    public void OnTap();
+    public interface IObjectInteractions
+    {
+        public void OnTap();
 
-    public void OnDoubleTap();
+        public void OnDoubleTap();
 
-    public void OnWiping();
+        public void OnWiping();
+    }
 }

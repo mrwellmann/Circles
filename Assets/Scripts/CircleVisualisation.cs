@@ -2,9 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public class CircleVisualization
+namespace Circles
 {
-    public Sprite CircleSprite;
-    public Color SpriteColor = Color.white;
+    [System.Serializable]
+    public class CircleVisualization
+    {
+        public Sprite CircleSprite;
+        public Color SpriteColor = Color.white;
+    }
 }
