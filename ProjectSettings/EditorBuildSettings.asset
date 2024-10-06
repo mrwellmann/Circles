@@ -6,7 +6,7 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/CirclesNoVibration.unity
+    path: Assets/_Circles/Scenes/CirclesNoVibration.unity
     guid: 243d06a4a5ab5344298f497e2aaaf2d0
   m_configObjects:
     com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: 8def0670916047c42b8aed74b7ad58ff, type: 2}
