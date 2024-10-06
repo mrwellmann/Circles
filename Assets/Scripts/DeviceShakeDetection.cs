@@ -9,7 +9,7 @@ namespace Circles
     {
         public event Action OnDeviceShakeDetected;
 
-        private float _accelerometerUpdateInterval = 1.0f / 60.0f;
+        private float accelerometerUpdateInterval = 1.0f / 60.0f;
 
         // The greater the value of LowPassKernelWidthInSeconds, the slower the
         // filtered value will converge towards current input sample (and vice versa).
@@ -17,35 +17,35 @@ namespace Circles
 
         // This next parameter is initialized to 2.0 per Apple's recommendation,
         // or at least according to Brady! ;)
-        private float _shakeDetectionThreshold = 1.5f;
+        private float shakeDetectionThreshold = 1.5f;
 
         private float lowPassFilterFactor;
         private Vector3 lowPassValue;
 
         private void Start()
         {
-            SetuoDeviceShake();
+            SetupDeviceShake();
         }
 
         private void Update()
         {
-            RecogniceDeviceShake();
+            RecognizeDeviceShake();
         }
 
-        private void SetuoDeviceShake()
+        private void SetupDeviceShake()
         {
-            lowPassFilterFactor = _accelerometerUpdateInterval / _lowPassKernelWidthInSeconds;
-            _shakeDetectionThreshold *= _shakeDetectionThreshold;
+            lowPassFilterFactor = accelerometerUpdateInterval / _lowPassKernelWidthInSeconds;
+            shakeDetectionThreshold *= shakeDetectionThreshold;
             lowPassValue = Input.acceleration;
         }
 
-        private void RecogniceDeviceShake()
+        private void RecognizeDeviceShake()
         {
             Vector3 acceleration = Input.acceleration;
             lowPassValue = Vector3.Lerp(lowPassValue, acceleration, lowPassFilterFactor);
             Vector3 deltaAcceleration = acceleration - lowPassValue;
 
-            if (deltaAcceleration.sqrMagnitude >= _shakeDetectionThreshold)
+            if (deltaAcceleration.sqrMagnitude >= shakeDetectionThreshold)
             {
                 // Perform your "shaking actions" here. If necessary, add suitable
                 // guards in the if check above to avoid redundant handling during

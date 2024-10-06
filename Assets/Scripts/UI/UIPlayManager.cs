@@ -1,39 +1,31 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Circles.UI
 {
     public class UIPlayManager : MonoBehaviour
     {
+        [FormerlySerializedAs("_CirclePrefab")]
         [SerializeField]
-        private GameObject _CirclePrefab;
+        private GameObject circlePrefab;
 
-        private List<UICircle> _Circles = new List<UICircle>();
-        private DeviceShakeDetection _shakeDetection;
+        private List<UICircle> circles = new List<UICircle>();
+        private DeviceShakeDetection shakeDetection;
 
         // Start is called before the first frame update
         private void Awake()
         {
-            _Circles.AddRange(GetComponentsInChildren<UICircle>());
+            circles.AddRange(GetComponentsInChildren<UICircle>());
 
-            _shakeDetection = GetComponent<DeviceShakeDetection>();
-            _shakeDetection.OnDeviceShakeDetected += OnDeviceShake;
+            shakeDetection = GetComponent<DeviceShakeDetection>();
+            shakeDetection.OnDeviceShakeDetected += OnDeviceShake;
         }
 
         private void OnDeviceShake()
         {
             throw new NotImplementedException();
-        }
-
-        private void Start()
-        {
-            //Restart();
-
-            //gameObject.GetComponent<BoxCollider2D>().size = new Vector2(
-            //    gameObject.GetComponent<RectTransform>().sizeDelta.x,
-            //    gameObject.GetComponent<RectTransform>().sizeDelta.y
-            //    );
         }
 
         private void Update()
@@ -44,7 +36,7 @@ namespace Circles.UI
 
         private void Restart()
         {
-            CleanArea(_Circles);
+            CleanArea(circles);
             CreateCircle(UICircleType.Red, presSpawn: true);
             CreateCircle(UICircleType.Yellow, presSpawn: true);
             CreateCircle(UICircleType.Blue, presSpawn: true);
@@ -59,19 +51,19 @@ namespace Circles.UI
             circles.Clear();
         }
 
-        private void CreateCircle(UICircleType circleType, int siblingindex = -1, bool presSpawn = false)
+        private void CreateCircle(UICircleType circleType, int siblingIndex = -1, bool presSpawn = false)
         {
-            var circleObject = Instantiate(_CirclePrefab);
+            var circleObject = Instantiate(circlePrefab);
             circleObject.transform.SetParent(transform);
 
-            if (siblingindex > 0)
-                circleObject.transform.SetSiblingIndex(siblingindex);
+            if (siblingIndex > 0)
+                circleObject.transform.SetSiblingIndex(siblingIndex);
 
             var circle = circleObject.GetComponent<UICircle>();
             circle.Create(circleType, presSpawn);
             circle.CircleClicked += OnCircleClicked;
 
-            _Circles.Add(circle);
+            circles.Add(circle);
         }
 
         private void OnCircleClicked(UICircle sender)

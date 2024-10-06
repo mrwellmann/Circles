@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 namespace Circles
 {
     public class ClapDetector : MonoBehaviour
@@ -12,8 +13,9 @@ namespace Circles
         /// <summary>
         /// The sound level threshold for detecting a clap.
         /// </summary>
+        [FormerlySerializedAs("_clapThreshold")]
         [SerializeField]
-        private float _clapThreshold = 0.5f;
+        private float clapThreshold = 0.5f;
 
         /// <summary>
         /// The length of the sample data used to analyze the microphone input.
@@ -22,28 +24,31 @@ namespace Circles
         /// <remarks>
         /// If _sampleDataLength is 128 and _audioSampleRate is 44100, then the length in seconds would be 128 / 44100 = ~0.0029 seconds.
         /// </remarks>
+        [FormerlySerializedAs("_sampleDataLength")]
         [SerializeField]
-        private int _sampleDataLength = 256;
+        private int sampleDataLength = 256;
 
         /// <summary>
         /// The maximum frequency of claps. In seconds, represents the minimum time interval between successive claps.
         /// </summary>
+        [FormerlySerializedAs("_maxClapFrequency")]
         [SerializeField]
-        private float _maxClapFrequency = 0.25f;
+        private float maxClapFrequency = 0.25f;
 
         /// <summary>
         /// The attack/decay threshold to distinguish a clap from other noises.
         /// </summary>
+        [FormerlySerializedAs("_attackDecayThreshold")]
         [SerializeField]
-        private float _attackDecayThreshold = 0.3f;
+        private float attackDecayThreshold = 0.3f;
 
-        private AudioClip _microphoneInput;
-        private bool _isMicrophoneInitialized;
-        private int _audioSampleRate = 44100;
-        private string _microphoneDevice;
-        private float _timeSinceLastClap;
-        private float _averageSoundLevel;
-        private bool _isDetectionPaused;
+        private AudioClip microphoneInput;
+        private bool isMicrophoneInitialized;
+        private int audioSampleRate = 44100;
+        private string microphoneDevice;
+        private float timeSinceLastClap;
+        private float averageSoundLevel;
+        private bool isDetectionPaused;
 
         private void Start()
         {
@@ -61,7 +66,7 @@ namespace Circles
         public void EnableClapDetection()
         {
             InitializeMicrophone();
-            _timeSinceLastClap = _maxClapFrequency;
+            timeSinceLastClap = maxClapFrequency;
         }
 
         /// <summary>
@@ -69,10 +74,10 @@ namespace Circles
         /// </summary>
         public void DisableClapDetection()
         {
-            if (_isMicrophoneInitialized)
+            if (isMicrophoneInitialized)
             {
-                Microphone.End(_microphoneDevice);
-                _isMicrophoneInitialized = false;
+                Microphone.End(microphoneDevice);
+                isMicrophoneInitialized = false;
             }
         }
 
@@ -81,7 +86,7 @@ namespace Circles
         /// </summary>
         public void PauseClapDetection()
         {
-            _isDetectionPaused = true;
+            isDetectionPaused = true;
         }
 
         /// <summary>
@@ -89,12 +94,12 @@ namespace Circles
         /// </summary>
         public void ResumeClapDetection()
         {
-            _isDetectionPaused = false;
+            isDetectionPaused = false;
         }
 
         private void Update()
         {
-            if (_isMicrophoneInitialized && !_isDetectionPaused)
+            if (isMicrophoneInitialized && !isDetectionPaused)
             {
                 DetectClapping(Time.deltaTime);
             }
@@ -105,14 +110,14 @@ namespace Circles
         /// </summary>
         private void DetectClapping(float deltaTime)
         {
-            _timeSinceLastClap += deltaTime;
+            timeSinceLastClap += deltaTime;
 
             float soundLevel = GetMaxSoundLevel();
-            _averageSoundLevel = 0.99f * _averageSoundLevel + 0.01f * soundLevel;
+            averageSoundLevel = 0.99f * averageSoundLevel + 0.01f * soundLevel;
 
-            if (soundLevel > _clapThreshold && soundLevel > _averageSoundLevel + _attackDecayThreshold && _timeSinceLastClap >= _maxClapFrequency)
+            if (soundLevel > clapThreshold && soundLevel > averageSoundLevel + attackDecayThreshold && timeSinceLastClap >= maxClapFrequency)
             {
-                _timeSinceLastClap = 0f;
+                timeSinceLastClap = 0f;
                 Debug.Log("Clap detected!");
                 OnClapDetected?.Invoke();
             }
@@ -125,9 +130,9 @@ namespace Circles
         {
             if (Microphone.devices.Length > 0)
             {
-                _microphoneDevice = Microphone.devices[0];
-                _microphoneInput = Microphone.Start(_microphoneDevice, true, 1, _audioSampleRate);
-                _isMicrophoneInitialized = true;
+                microphoneDevice = Microphone.devices[0];
+                microphoneInput = Microphone.Start(microphoneDevice, true, 1, audioSampleRate);
+                isMicrophoneInitialized = true;
             }
             else
             {
@@ -141,13 +146,13 @@ namespace Circles
         private float GetMaxSoundLevel()
         {
             float maxSoundLevel = 0f;
-            float[] sampleData = new float[_sampleDataLength];
-            int microphonePosition = Microphone.GetPosition(_microphoneDevice) - (_sampleDataLength + 1);
+            float[] sampleData = new float[sampleDataLength];
+            int microphonePosition = Microphone.GetPosition(microphoneDevice) - (sampleDataLength + 1);
             if (microphonePosition < 0) return 0;
 
-            _microphoneInput.GetData(sampleData, microphonePosition);
+            microphoneInput.GetData(sampleData, microphonePosition);
 
-            for (int i = 0; i < _sampleDataLength; i++)
+            for (int i = 0; i < sampleDataLength; i++)
             {
                 float currentSoundLevel = Mathf.Abs(sampleData[i]);
                 if (currentSoundLevel > maxSoundLevel)

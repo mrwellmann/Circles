@@ -421,10 +421,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1343049924}
     m_Modifications:
-    - target: {fileID: 1529358881, guid: b3288ffdd7f948e4f9931b311e7bfcfd, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 68577570599815898, guid: b3288ffdd7f948e4f9931b311e7bfcfd, type: 3}
       propertyPath: m_Name
       value: BasicCircle

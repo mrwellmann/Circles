@@ -3,6 +3,7 @@ using Lofelt.NiceVibrations;
 using UnityEngine;
 using UnityEngine.UI;
 using static Lofelt.NiceVibrations.HapticPatterns;
+
 namespace Circles.UI
 {
     public enum UICircleType
@@ -20,17 +21,17 @@ namespace Circles.UI
         [SerializeField]
         private GenericDictionary<UICircleType, Sprite> circleImages;
 
-        private Button _button;
-        private Image _image;
-        private AudioSource _audioSource;
+        private Button button;
+        private Image image;
+        private AudioSource audioSource;
 
-        private Rigidbody2D _rb;
+        private Rigidbody2D rb;
 
         public UICircleType CircleType { get; private set; }
 
         public void Awake()
         {
-            _rb = GetComponent<Rigidbody2D>();
+            rb = GetComponent<Rigidbody2D>();
         }
 
         private void OnClick()
@@ -42,13 +43,13 @@ namespace Circles.UI
         {
             CircleType = circleType;
 
-            _button = GetComponent<Button>();
-            _button.onClick.AddListener(OnClick);
+            button = GetComponent<Button>();
+            button.onClick.AddListener(OnClick);
 
-            _image = GetComponent<Image>();
-            _image.sprite = circleImages[circleType];
+            image = GetComponent<Image>();
+            image.sprite = circleImages[circleType];
 
-            _audioSource = GetComponent<AudioSource>();
+            audioSource = GetComponent<AudioSource>();
 
             gameObject.SetActive(true);
             if (!preSpawn)
@@ -75,7 +76,7 @@ namespace Circles.UI
 
         private void PlayAudio()
         {
-            _audioSource.Play();
+            audioSource.Play();
         }
 
         private void PlayHaptics()
@@ -83,14 +84,14 @@ namespace Circles.UI
             HapticPatterns.PlayPreset(PresetType.Selection);
         }
 
-        public void ActivateRigindbody()
+        public void ActivateRigidbody()
         {
-            _rb.simulated = true;
+            rb.simulated = true;
         }
 
-        public void DeactivateRigitBoday()
+        public void DeactivateRigidbody()
         {
-            _rb.simulated = false;
+            rb.simulated = false;
         }
     }
 }
