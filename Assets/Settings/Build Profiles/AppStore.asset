@@ -19,7 +19,7 @@ MonoBehaviour:
     rid: 4464999203634937857
   m_Scenes:
   - m_enabled: 1
-    m_path: Assets/Scenes/CirclesNoVibration.unity
+    m_path: Assets/_Circles/Scenes/CirclesNoVibration.unity
   m_ScriptingDefines: []
   m_PlayerSettingsYaml:
     m_Settings: []
