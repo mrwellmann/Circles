@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Circles-PhotoshopGrey _0: -7616292214723198450
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

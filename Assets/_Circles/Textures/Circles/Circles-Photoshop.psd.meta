@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Circles-Photoshop_0: -1222886414603334666
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
